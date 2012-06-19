@@ -2,7 +2,7 @@ package Text::Ngram::MySQL::FullText;
 use warnings;
 use strict;
 use Encode qw/encode decode is_utf8/;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub new {
 	my $class = shift;
@@ -80,6 +80,7 @@ sub _make_ngram_fulltext {
 	my @ngrams;
 	for my $i (0 .. length($text) - 1){
 		my $str = substr $text, $i, $self->{window_size};
+		next if length($str) < $self->{window_size};
 		#str = encode 'utf8', $str;
 		push @ngrams, $str;
 	}

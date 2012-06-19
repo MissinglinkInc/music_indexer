@@ -113,8 +113,15 @@ sub build_sql {
 	$_[0]{'ngram_album'} = $ngram->to_fulltext($_[0]{'album'});
 	
 	my $pairs;
-	foreach my $k (keys $_[0]) {
+	foreach my $k (keys %{$_[0]}) {
 		if (defined $_[0]->{$k}) {
+			$_[0]->{$k} =~ s/'/''/g;
+			$_[0]->{$k} =~ s/"/\"/g;
+			$_[0]->{$k} =~ s/\\/\\\\/g;
+			$_[0]->{$k} =~ s/\x00/\\x00/g;
+			$_[0]->{$k} =~ s/\n//g;
+			$_[0]->{$k} =~ s/\r/\\r/g;
+			$_[0]->{$k} =~ s/\x1a/\\x1a/g;
 			$pairs .= '`'.$k.'`=\''.$_[0]->{$k}.'\',';
 		}
 		else {
