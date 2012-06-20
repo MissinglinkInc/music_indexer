@@ -1,0 +1,61 @@
+body {
+	margin: 10px 20px;
+}
+
+header {
+	height: 50px;
+	display: -moz-box;
+	display: -webkit-box;
+	display: box;
+	-moz-box-align: center;
+	-webkit-box-align: center;
+	box-align: center;
+}
+.clearfix {
+	width:100%;
+}
+.clearfix:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+h1 {
+	margin-right:10px;
+}
+.form.small {
+}
+.form.small input {
+	height:20px;
+}
+.form.small input[type=text] {
+	width:250px;
+}
+
+dl {
+	max-width: 600px;
+}
+
+dl dt {
+	font-size:1.3em;
+	font-weight:bold;
+	margin-bottom: 5px;
+}
+
+dl dd {
+	margin: 0 0 20px 10px;
+}
+
+dl dd .desc {
+	color:#093;
+}
+
+dl dd div {
+	margin-bottom: 5px;
+}
+
+#player {
+	position:fixed;
+	bottom:0;
+	width:100%;
+}
