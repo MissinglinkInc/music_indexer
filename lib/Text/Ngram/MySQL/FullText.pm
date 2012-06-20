@@ -1,6 +1,7 @@
 package Text::Ngram::MySQL::FullText;
 use warnings;
 use strict;
+use Data::Dumper;
 use Encode qw/encode decode is_utf8/;
 our $VERSION = '0.03';
 
@@ -9,7 +10,7 @@ sub new {
 	return bless {
 		window_size => 2,
 		column_name => 'myFullTextColumn',
-		delimiters  => q{ ,.":;()\[\]\{\}!\?\-\|　！？。、・：；『』「」《》〔〕<>()“”‘’≪≫【】〈〉＜＞},
+		delimiters  => q{!-\/:-@\[-`\{-~、。，．・：；？！゛゜´｀¨＾￣＿ヽヾゝゞ〃仝々〆〇ー―‐／＼～∥｜…‥‘’“”（）〔〕［］｛｝〈〉《》「」『』【】＋－±×÷＝≠＜＞≦≧∞∴♂♀°′″℃￥＄￠￡％＃＆＊＠§☆★○●◎◇◆□■△▲▽▼※〒→←↑↓〓∈∋⊆⊇⊂⊃∪∩∧∨￢⇒⇔∀∃∠⊥⌒∂∇≡≒≪≫√∽∝∵∫∬Å‰♯♭♪†‡¶◯ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψωАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя─│┌┐┘└├┬┤┴┼━┃┏┓┛┗┣┳┫┻╋┠┯┨┷┿┝┰┥┸╂①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ�㍉㌔㌢㍍㌘㌧㌃㌶㍑㍗㌍㌦㌣㌫㍊㌻㎜㎝㎞㎎㎏㏄㎡㍻〝〟№㏍℡㊤㊥㊦㊧㊨㈱㈲㈹㍾㍽㍼≒≡∫∮∑√⊥∠∟⊿∵∩∪},
                 return_bind => 0,
 		@_,
 	}, $class;
@@ -52,7 +53,8 @@ sub _parse {
 	$text = decode('utf8', $text) unless is_utf8($text);
 	
 	my $regexp = decode 'utf8', "[$self->{delimiters}]";
-	my @chunks = split /$regexp/, $text;
+	$text =~ s/$regexp/ /g;
+	my @chunks = split /[\s　]/, $text;
 
 	my @ngrams;
 	foreach (@chunks){
@@ -77,10 +79,17 @@ sub _make_ngram_fulltext {
 	my $text = shift;
 	return if !defined $text;
 
+	my $length = length($text);
+	
+	return if $text eq '';
+	
+	if ($length < $self->{window_size}) {
+		return $text;
+	}
+	
 	my @ngrams;
-	for my $i (0 .. length($text) - 1){
+	for (my $i = 0; $i < $length - $self->{window_size} + 1; ++$i){
 		my $str = substr $text, $i, $self->{window_size};
-		next if length($str) < $self->{window_size};
 		#str = encode 'utf8', $str;
 		push @ngrams, $str;
 	}

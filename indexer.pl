@@ -93,8 +93,10 @@ foreach my $file (@found_files) {
 		$escaped_target_path = Encode::decode('cp932',$target_path);
 	}
 	else {
-		$relative_path = $file->[2];
-		$escaped_target_path = $target_path;
+		#$relative_path = $file->[2];
+		#$escaped_target_path = $target_path;
+		$relative_path = Encode::decode('utf-8',$file->[2]);
+		$escaped_target_path = Encode::decode('utf-8',$target_path);
 	}
 
 	$escaped_target_path =~ s/\\/\\\\/g;
@@ -122,7 +124,7 @@ sub build_sql {
 			$_[0]->{$k} =~ s/\n//g;
 			$_[0]->{$k} =~ s/\r/\\r/g;
 			$_[0]->{$k} =~ s/\x1a/\\x1a/g;
-			$pairs .= '`'.$k.'`=\''.$_[0]->{$k}.'\',';
+			$pairs .= '`'.$k.'`=\''.Encode::encode('utf-8',$_[0]->{$k}).'\',';
 		}
 		else {
 			$pairs .= '`'.$k.'`=NULL,';
