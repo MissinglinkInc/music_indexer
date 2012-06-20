@@ -30,7 +30,8 @@ class Ngram_Converter{
 		}
 		$length = mb_strlen($string,'UTF-8') ;
 		if ($length < $n){
-			return "+".$string."*";
+			//return "+".$string."*";
+			return "+".$string;
 		}
 	
 		for ($i = 0; $i < $length-$n+1; $i++) {

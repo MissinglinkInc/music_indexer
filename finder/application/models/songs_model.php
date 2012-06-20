@@ -8,7 +8,6 @@ class Songs_Model extends CI_Model {
 	}
 
 	public function ngram_search($query_ngram,$search_by) {
-		echo $query_ngram;
 		$by = '';
 		foreach ($search_by as $name) {
 			$by .= 'ngram_'.$name.',';
